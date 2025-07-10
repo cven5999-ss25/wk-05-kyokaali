@@ -15,7 +15,7 @@ Learning reflections are part of your weekly homework and have a weight of 20% o
 
 # Homework Assignment
 
-<!--# Add your reflections on the homework programming assignment here -->
+\<This assignment brought together concepts and skills from multiple lectures, allowing me to practice and reinforce my understanding of the the different functions. Overall, this assignment was a practical and meaningful\>
 
 # Readings
 

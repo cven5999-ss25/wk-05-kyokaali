@@ -12,6 +12,9 @@ execute:
 ---
 
 ```{r}
+library(tidyverse)
+library(gapminder)
+library(lubridate)
 
 ```
 
@@ -28,15 +31,30 @@ Integer and double vectors are collectively known as numeric vectors.
 
 ```{r}
 
-
+glimpse(gapminder)
+gapminder
 
 ```
 
 ## Types of atomic vectors
 
+A
+
 ```{r}
 
+vector_lgl <- c(TRUE, TRUE, FALSE)
+typeof(vector_lgl)
+sum(vector_lgl)
+class(vector_lgl)
 
+vector_int <- c(1L, 3L, 6L)
+typeof(vector_int)
+vector_dbl <- c(192, 118.5,162.5)
+class(vector_dbl)
+class(vector_dbl)
+
+vector_chr <- c("large", "small", "medium")
+typeof(vector_chr)
 ```
 
 ## Explicit vector coercion & augmented vectors
@@ -45,12 +63,47 @@ Vectors can also contain arbitrary additional metadata in the form of attributes
 
 ```{r}
 
+as.numeric(vector_lgl)
+vector_fct <- factor(vector_chr,levels=c("small","medium","large"))
+typeof(vector_fct)
+attributes(vector_fct)
+as.integer(vector_fct)
 
+ tib_data <-tibble(
+  vector_lgl= vector_lgl,
+  vector_int= vector_int,
+  vector_dbl= vector_dbl,
+  vector_chr= vector_chr,
+  vector_fct=vector_fct,
+  date=Sys.Date(),
+  date2= "06/30/2025"
+)
 ```
 
 ### Working with dates
 
 ```{r}
+as.numeric(Sys.Date()) # number of days since 1970-01-01(YYYY -MM-DD) ISO 8610, excel is 1900
+#Q: which date is number 1
+
+as_date(1)
+
+as_date(-1)
+
+tib_data |>
+  mutate(month = month(date,label =TRUE, abbr =FALSE  )) |>
+mutate(wday =wday(date2))
+
+tib_data |>
+  mutate(date2=mdy(date2))|>
+  mutate(month=month(date2),
+         week=week(date2),
+         wday=wday(date2,label =TRUE,abbr =FALSE),
+         quarter=quarter(date2))
 
 
+
+```
+
+```         
 ```

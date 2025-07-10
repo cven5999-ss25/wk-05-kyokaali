@@ -11,7 +11,7 @@ Learning reflections are part of your weekly homework and have a weight of 20% o
 
 # Lecture
 
-<!--# Add your reflections on the lecture of this week here -->
+\<This lecture deepened my understanding of tidy data principles and the importance of data structure in analysis. I appreciated the practical examples, especially the issues encountered when working with inconsistent data types and how to resolve them. The emphasis on converting between wide and long formats was particularly enlightening, as it showed how tidy data facilitates clearer visualizations and more efficient analysis. I now better understand how respecting data types and choosing the right structure enhances reproducibility and collaboration. The live coding exercises made the concepts accessible and directly applicable to real world data.\>
 
 # Homework Assignment
 
@@ -19,7 +19,7 @@ Learning reflections are part of your weekly homework and have a weight of 20% o
 
 # Readings
 
-<!--# Add your reflections on the required readings here -->
+\<**“Tidy Data” chapter from R for Data Science:** The chapter on tidy data reframed my understanding of data structuring in R by showing that nearly any dataset can and should be reshaped into a consistent format. By enforcing three clear rules: that each variable resides in its own column, each observation in its own row, and each cell contains a single value, the messy becomes manageable . Learning tools like pivot_longer() and pivot_wider() in tidyr was eye‑opening, as they demonstrate how to reshape tables without altering underlying values. Most importantly, once data is tidy, working with the tidyverse becomes fluid, saving time and reducing errors. I now appreciate how tidying is essential groundwork for clear, efficient analysis.\>
 
 # Submit learning reflections
 

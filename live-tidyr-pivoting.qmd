@@ -34,13 +34,23 @@ The dataset contains the results of a waste characterisation study of public bin
 Additional metadata on location and type of bin is available.
 
 ```{r}
-
-
-
+waste_data <- read_delim(here::here("data/rbtl_fs22_waste_composition_bellevue.csv"), delim = ";")
 ```
 
-```{r}
 
+
+
+```{r}
+waste_data_long<-waste_data|>
+  select(number, starts_with("weight"))|>
+  rename_with(~str_remove(.x, "weight_"))|>
+  select(-total) |>
+  pivot_longer(cols = !number,
+                              names_to = "weight category",
+  values_to ="weight")
+
+```
+  
 
 ```
 
@@ -48,23 +58,32 @@ Additional metadata on location and type of bin is available.
 
 The following exercise is taken from [@zimmerman2019].
 
+
+
+`### From wide to long
+
 ```{r}
 
 gapminder_wide <- read_csv("https://raw.githubusercontent.com/swcarpentry/r-novice-gapminder/main/episodes/data/gapminder_wide.csv")
 
+
+
+gapminder_wide|>
+  pivot_longer(cols = gdpPercap_1952:pop_2007,
+               names_to = "obstype_year",
+               values_to = "obs_value")|>
+               separate(col = obstype_year, into = c("obs_type" ,"year"), sep ="_")
+               
+gapminder_long <- gapminder_wide |> 
+  pivot_longer(cols = gdpPercap_1952:pop_2007,
+               names_to = "obstype_year",
+               values_to = "obs_value") |> 
+  separate(col = obstype_year, into = c("obs_type", "year"), sep = "_") 
+
 ```
 
-```{r}
 
 
-```
-
-### From wide to long
-
-```{r}
-
-
-```
 
 **Your turn**
 
@@ -72,6 +91,17 @@ gapminder_wide <- read_csv("https://raw.githubusercontent.com/swcarpentry/r-novi
 2.  Assign the created dataframe to an object with the name `gapminder_long_summary`
 
 ```{r}
+
+gapminder_long_summary<-gapminder_long |>
+  group_by(continent, obs_type) |>
+  summarize(means= mean(obs_value))
+
+gapminder_long_summary|>
+  pivot_wider(names_from =obs_type,
+              values_from =mean)|>
+  knitr::kable(digits=1)
+  
+
 
 ```
 

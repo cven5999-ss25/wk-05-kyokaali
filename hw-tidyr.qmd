@@ -15,7 +15,11 @@ execute:
 
 1.  What's the `tidyverse` Package? Describe in maximum two sentences below.
 
+    The tidyverse is a collection of R packages designed for data science that share a common philosophy, grammar, and data structures, including packages like ggplot2, dplyr, tidyr, and readr. It simplifies data manipulation, visualization, and analysis by using consistent syntax and principles
+
 2.  What's the [`here` Package](https://here.r-lib.org/articles/here.html)? Why is useful when working with quarto or R Markdown files?
+
+    The here package helps manage file paths reliably by setting the project’s root directory as the reference point, avoiding hard-coded paths. This is especially useful in Quarto or R Markdown documents, where relative paths can break when files are moved or the working directory changes.
 
 ```{r}
 library(tidyverse)
@@ -30,6 +34,8 @@ library(here)
 
 ```{r}
 
+
+waste_data <- read_csv(here("data/msw-generation-and-composition-by-income.csv"))
 
 ```
 
@@ -52,6 +58,17 @@ waste_data |>
 
 ```{r}
 
+waste_data |> 
+  count(income_cat)
+
+levels_income_cat <- c("high income", 
+                       "upper-middle income",
+                       "lower-middle income",
+                       "low income")
+
+waste_data_fct <- waste_data |> 
+  mutate(income_cat = factor(income_cat, levels = levels_income_cat))
+
 ```
 
 # Task 3: From wide to long
@@ -71,7 +88,11 @@ waste_data |>
 4.  Render and fix any errors
 
 ```{r}
-
+waste_data_long <- waste_data_fct |> 
+  pivot_longer(cols = food_organic_waste:yard_garden_green_waste,
+               names_to = "waste_category",
+               values_to = "percent") |> 
+  drop_na(percent)
 ```
 
 # Task 4: Summarise data
@@ -89,7 +110,9 @@ waste_data_long <- read_rds(here("data/msw-generation-and-composition-by-income-
 2.  Assign the created dataframe to an object with the name `waste_data_long_mean`.
 
 ```{r}
-
+waste_data_long_mean <- waste_data_long |> 
+  group_by(income_cat, waste_category) |> 
+  summarise(mean_percent = mean(percent)) 
 ```
 
 1.  Starting with the `waste_data_long_mean` object, execute the code and observe the output in the Console. Would you publish this table in this format in a report?
@@ -101,7 +124,11 @@ waste_data_long <- read_rds(here("data/msw-generation-and-composition-by-income-
 4.  Render and fix any errors
 
 ```{r}
+waste_data_long_mean
 
+waste_data_long_mean |> 
+  pivot_wider(names_from = waste_category,
+              values_from = mean_percent) 
 ```
 
 # Task 5: Data visualisation
@@ -123,7 +150,22 @@ waste_data_long_mean <- read_rds(here("data/msw-generation-and-composition-by-in
 **Note:** The size of the plot will be different. That is alright and does not need to match.
 
 ```{r}
-
+ggplot(data = waste_data_long_mean, 
+       mapping = aes(x = mean_percent, 
+                     y = waste_category, 
+                     fill = income_cat)) + 
+  geom_col(position = position_dodge()) + 
+  labs(title = "Waste Composition", 
+       subtitle = "Mean percentages of nine waste categories displayed by income categories",
+       x = "mean (percent)", 
+       y = "waste category", 
+       fill = "Income category", 
+       caption = "Data from: https://datacatalog.worldbank.org/search/dataset/0039597") + 
+  scale_x_continuous(breaks = seq(0, 50, 5)) + 
+  scale_fill_brewer(type = "qual", palette = 3) +
+  theme_minimal() + 
+  theme(panel.grid.minor = element_blank(), 
+        panel.grid.major.y = element_blank())
 ```
 
 ![](figs/fig-01-mean-waste-composition-by-income.png)
